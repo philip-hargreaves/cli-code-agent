@@ -3,7 +3,12 @@ import sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+
 from functions.get_files_info import schema_get_files_info
+from functions.get_file_content import schema_get_file_content
+from functions.write_file import schema_write_file
+from functions.run_python_file import schema_run_python_file
+from functions.function_caller import call_function
 
 # Setup
 load_dotenv()
@@ -25,12 +30,16 @@ def main():
         sys.exit(1)
 
     prompt = args[0]
+    
     system_prompt = """
 You are a helpful AI coding agent.
 
 When a user asks a question or makes a request, make a function call plan. You can perform the following operations:
 
 - List files and directories
+- Read file contents
+- Execute Python files with optional arguments
+- Write or overwrite files
 
 All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
 """
@@ -38,6 +47,9 @@ All paths you provide should be relative to the working directory. You do not ne
     available_functions = types.Tool(
         function_declarations=[
             schema_get_files_info,
+            schema_get_file_content,
+            schema_write_file,
+            schema_run_python_file,
         ]
     )
 
@@ -48,7 +60,7 @@ All paths you provide should be relative to the working directory. You do not ne
 
     # Generate and print response
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.0-flash",
         contents=messages,
         config=types.GenerateContentConfig(
             tools=[available_functions],
@@ -59,11 +71,19 @@ All paths you provide should be relative to the working directory. You do not ne
     part = response.candidates[0].content.parts[0]
 
     if part.function_call:
-        function_call = part.function_call
-        print(f"Calling function: {function_call.name}({function_call.args})")
+        function_call_part = part.function_call
+        function_call_result = call_function(function_call_part, verbose=is_verbose)
+        if (
+            not function_call_result.parts
+            or not function_call_result.parts[0].function_response
+        ):
+            raise ValueError("Error: Invalid function response received from call_function.")
+        if is_verbose:
+            response_data = function_call_result.parts[0].function_response.response
+            print(f"-> {response_data}")
+
     else:
         print(part.text)
-
 
     if is_verbose:
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")

@@ -1,5 +1,6 @@
 import os
 from config import MAX_FILE_CHARS
+from google.genai import types
 
 def get_file_content(working_directory: str, file_path: str) -> str:
     """
@@ -39,3 +40,18 @@ def get_file_content(working_directory: str, file_path: str) -> str:
         return f'Error: Cannot decode "{file_path}". It may be a binary file.'
     except Exception as e:
         return f"Error: {e}"
+    
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads the contents of a specified file from the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The relative path to the file to be read.",
+            ),
+        },
+        required=["file_path"],
+    ),
+)
