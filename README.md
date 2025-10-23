@@ -36,7 +36,7 @@ Be extremely careful if you modify the code to point at other directories. This 
 1.  **Clone the repo:**
 
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    git clone https://github.com/philip-hargreaves/cli-code-agent
     cd your-repo-name
     ```
 
