@@ -2,9 +2,9 @@
 
 This is a simple but powerful autonomous AI agent built with Python and Google's Gemini API. It can read files, write code, and execute scripts to autonomously complete complex coding and debugging tasks.
 
-## Demo: Autonomous Bug Fix 🐞
+## Demo: Autonomous Bug Fix
 
-The agent is pre-configured to work on a simple Python calculator (in the `/calculator` directory) which has a classic bug: it doesn't respect operator precedence (`3 + 7 * 2` incorrectly returns `20`).
+The agent is pre-configured to work on a simple Python calculator (in the `/calculator` directory) which has a typical bug: it doesn't respect operator precedence (`3 + 7 * 2` incorrectly returns `20`).
 
 You can give the agent a single prompt to fix this, and it will handle the entire process on its own.
 
@@ -83,7 +83,7 @@ The core logic is in `main.py`, which implements a loop that:
 
 Right now, the agent is **hard-coded** to work _only_ in the `./calculator` directory via a constant in `functions/function_caller.py`.
 
-To generalize it, you would replace this hard-coded path to accept a directory path from the user, and then pass that path as an argument to `call_function` inside the agent loop.
+To generalise it, you would replace this hard-coded path to accept a directory path from the user, and then pass that path as an argument to `call_function` inside the agent loop.
 
 ```bash
 # Example of a generalised call
