@@ -37,7 +37,7 @@ Be extremely careful if you modify the code to point at other directories. This 
 
     ```bash
     git clone https://github.com/philip-hargreaves/cli-code-agent
-    cd your-repo-name
+    cd cli-code-agent
     ```
 
 2.  **Install dependencies:**
