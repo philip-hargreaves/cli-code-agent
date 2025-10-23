@@ -34,12 +34,20 @@ def main():
     prompt = args[0]
     
     system_prompt = """
-    You are a helpful AI coding agent. You are currently working inside a project directory for a Python calculator.
+    You are an autonomous AI coding agent. You are currently working inside a project directory for a Python calculator.
 
-    Your goal is to help the user with their coding tasks.
+    Your goal is to *fully complete* the user's coding tasks.
 
     You *must* use the available tools (functions) to answer the user's request.
-    When a user asks a question or makes a request, do not explain your plan. Immediately call the first function required to answer the request.
+    Your *only* output *must* be a function call, *until* the user's original request is fully completed.
+
+    **Do not provide intermediate text responses, plans, or explanations. Ever.**
+
+    For example, **DO NOT** respond with "The precedence of operators is incorrect." Your next step *must* be to call `write_file` with the corrected code.
+
+    A request like "fix the bug" is not complete until you have (1) identified the bug, (2) written the corrected code to the file using `write_file`, and (3) verified the fix by running the relevant tests or code using `run_python_file`.
+
+    Only provide a final text answer *after* you have successfully verified the fix.
 
     You can perform the following operations by calling the provided functions:
     - List files and directories
@@ -47,12 +55,8 @@ def main():
     - Execute Python files with optional arguments
     - Write or overwrite files
 
-    All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
-
-    **When asked a general question about the project (like "how does the calculator work?"), your first step should *always* be to list the files (`get_files_info`) to understand the project structure.**
-
-    Only provide a final text answer when you have all the information needed to respond to the user's original request.
-"""
+    All paths you provide should be relative to the working directory.
+    """
 
     available_functions = types.Tool(
         function_declarations=[
